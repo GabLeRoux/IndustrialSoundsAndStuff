@@ -1,6 +1,7 @@
 package soundnoisesmokestuff;
 
 import processing.core.PApplet;
+import ddf.minim.AudioInput;
 import ddf.minim.Minim;
 import ddf.minim.analysis.FFT;
 
@@ -9,82 +10,108 @@ public class SoundVisualizer {
 	FFT fft; // this is god damn magic :D
 
 	private PApplet parent;
-	private ddf.minim.AudioPlayer track;
+	private AudioInput audioStream;
 	private Minim minim;
 
 	public float lowFreq = 0;
 	public float midFreq = 0;
 	public float hiFreq = 0;
 
-	private String audioSample = "../../data/test.mp3";
+	private float lowTemp = 0;
+	private float midTemp = 0;
+	private float hiTemp = 0;
+
+	public boolean directVal = false;
+	public boolean spectrumEnabled = false;
+	public boolean equilizerEnabled = false;
 
 	SoundVisualizer(PApplet parent) {
 		this.parent = parent;
 		minim = new Minim(parent);
-		track = minim.loadFile(audioSample, 2048);
-		fft = new FFT(track.bufferSize(), track.sampleRate());
-		track.loop();
+
+		// Load microphone input
+		audioStream = minim.getLineIn(Minim.STEREO, 1024);
+
+		// All of the magic comes from this :)
+		fft = new FFT(audioStream.bufferSize(), audioStream.sampleRate());
 	}
 
 	void draw() {
-		parent.textSize(24);
-		parent.strokeWeight(1.5f);
 
 		// forward fft on one of track's buffers
-		fft.forward(track.mix);
+		fft.forward(audioStream.mix);
 
-		parent.text("frequency", 0, parent.height * 4 / 5);
+		// parent.text("frequency", 0, parent.height * 4 / 5);
 		parent.pushMatrix();
-		parent.translate(200, 0);
+		parent.translate(0, 0);
 
 		// Draw frequency spectrum as a series of vertical lines
-		for (int i = 0; i < 0 + fft.specSize(); i++) {
-			parent.stroke(i, i, i);
-			parent.line(i, parent.height * 4 / 5, i, parent.height * 4 / 5
-					- fft.getBand(i) * 4);
-
-			if (i >= 100 && i <= 200) {
-				parent.stroke(255, 255, 0);
-				parent.line(i, parent.height * 4 / 5, i, parent.height * 4 / 5
-						- fft.getBand(i) * 4);
-			}
-			if (i >= 200 && i <= 300) {
-				parent.stroke(0, 255, 255);
-				parent.line(i, parent.height * 4 / 5, i, parent.height * 4 / 5
-						- fft.getBand(i) * 4);
-			}
-		}
+		// for (int i = 0; i < 0 + fft.specSize(); i++) {}
 
 		parent.popMatrix();
 
-		lowFreq = fft.getBand(50);
-		midFreq = fft.getBand(150);
-		hiFreq = fft.getBand(350);
+		lowTemp = 0;
+		midTemp = 0;
+		hiTemp = 0;
 
-		// changing the line color
-		parent.stroke(0, 255, 0);
+		// low freqs
+		for (int i = 0; i <= 100; i++) {
+			if (!directVal)
+				lowTemp += fft.getBand(i);
+			// Frequency Spectrum
+			if (spectrumEnabled) {
+				drawSpectrum(i, 255.0f, 0, 0.0f, 100.0f);
+			}
+		}
 
-		// the waveform is drawn by connecting neighbor values with a line.
-		// The values in the buffers are between -1 and 1.
-		// If we don't scale them up our waveform will look like a straight
-		// line.
-		// Thus each of the values is multiplied by 50
+		// mid freqs
+		for (int i = 100; i <= 200; i++) {
+			if (!directVal)
+				midTemp += fft.getBand(i);
+			if (spectrumEnabled) {
+				drawSpectrum(i, 0, 255.0f, 0.0f, 100.0f);
+			}
+		}
 
-		parent.text("left amplitude", 0, 50);
-		parent.text("right amplitude", 0, 150);
-		parent.text("mixed amplitude", 0, 250);
-		for (int i = 200; i < track.left.size() - 1; i++) {
-			parent.line(i, 50 + track.left.get(i) * 50, i + 1,
-					50 + track.left.get(i + 1) * 50);
-			parent.line(i, 150 + track.right.get(i) * 50, i + 1,
-					150 + track.right.get(i + 1) * 50);
-			parent.line(i, 250 + track.mix.get(i) * 50, i + 1,
-					250 + track.mix.get(i + 1) * 50);
+		// hi freqs
+		for (int i = 200; i <= 300; i++) {
+			if (!directVal)
+				hiTemp += fft.getBand(i);
+			if (spectrumEnabled) {
+				drawSpectrum(i, 0, 0, 255.0f, 100.0f);
+			}
+		}
+
+		if (directVal) {
+			lowFreq = fft.getBand(50);
+			midFreq = fft.getBand(150);
+			hiFreq = fft.getBand(250);
+		} else {
+			lowFreq = lowTemp / 100.0f;
+			midFreq = midTemp / 100.0f;
+			hiFreq = hiTemp / 100.0f;
+		}
+
+		if (equilizerEnabled) {
+			drawEquilizer();
 		}
 	}
 
+	private void drawEquilizer() {
+		parent.stroke(255.0f, 255.0f, 255.0f, 100.0f);
+		for (int i = 0; i < audioStream.mix.size() - 1; i++) {
+			parent.line(i, parent.height / 2 + audioStream.mix.get(i) * 100,
+					i + 1, parent.height / 2 + audioStream.mix.get(i + 1) * 100);
+		}
+	}
+
+	private void drawSpectrum(int x, float r, float g, float b, float a) {
+		parent.stroke(r, g, b, a);
+		parent.line(x, parent.height, x, parent.height - fft.getBand(x) * 4);
+	}
+
 	void stop() {
-		track.close();
+		audioStream.close();
 		minim.stop();
 	}
 }
