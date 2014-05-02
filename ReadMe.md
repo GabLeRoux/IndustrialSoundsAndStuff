@@ -4,6 +4,14 @@ Projet réalisé dans le cadre du cours [7ARN255 Atelier d'art Sonore](http://co
 
 Les enregistrements proviennent d'usines du Saguenay.
 
+## Instructions
+
+### Utiliser Eclipse pour faire du processing (much better)
+
+Utiliser [Proclipsing](https://code.google.com/p/proclipsing/wiki/GettingStarted)
+
+Ensuite, on importe le projet dans eclipse puis on l'exécute ;)
+
 ## Sources
 
 * [Fast Fourier Transform (FFT) Class](http://code.compartmental.net/minim/javadoc/ddf/minim/analysis/FFT.html)
