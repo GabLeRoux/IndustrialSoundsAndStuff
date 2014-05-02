@@ -4,7 +4,7 @@ Projet réalisé dans le cadre du cours [7ARN255 Atelier d'art Sonore](http://co
 
 Par Gabriel Le Breton et Gabriel Pilote
 
-Les enregistrements proviennent d'usines du Saguenay.
+Les enregistrements dans le dossier `data` proviennent d'usines du Saguenay.
 
 ## Instructions
 
