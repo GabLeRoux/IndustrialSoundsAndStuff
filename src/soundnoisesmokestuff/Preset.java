@@ -35,10 +35,10 @@ public class Preset {
 			psEnabled = false;
 			psCenter = true;
 			colorfullBackground = true;
-			colorMultiplier = 12;
-			redMultiplier = 2;
-			greenMultiplier = 2;
-			blueMultiplier = 2;
+			colorMultiplier = 1;
+			redMultiplier = 8;
+			greenMultiplier = 37;
+			blueMultiplier = 37;
 			sv.directVal = true;
 			sv.equilizerEnabled = true;
 			sv.spectrumEnabled = false;
@@ -153,9 +153,9 @@ public class Preset {
 		IndustrialSounds.println("s   - Frequency Spectrum: ", (sv.spectrumEnabled) ? "Enabled" : "Disabled");
 		IndustrialSounds.println("");
 		IndustrialSounds.println("Multipliers");
+		IndustrialSounds.println("c/C - Color Multiplier: ", colorMultiplier);
 		IndustrialSounds.println("r/R - Red Multiplier:   ", redMultiplier);
 		IndustrialSounds.println("g/G - Green Multiplier: ", greenMultiplier);
 		IndustrialSounds.println("b/B - Blue Multiplier:  ", blueMultiplier);
-		IndustrialSounds.println("c/C - Color Multiplier: ", colorMultiplier);
 	}
 }

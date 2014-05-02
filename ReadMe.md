@@ -2,6 +2,8 @@
 
 Projet réalisé dans le cadre du cours [7ARN255 Atelier d'art Sonore](http://cours.uqac.ca/7ARN255) de l'[Université du Québec à Chicoutimi](http://www.uqac.ca/) à l'hiver 2014.
 
+Les enregistrements proviennent d'usines du Saguenay.
+
 ## Sources
 
 * [Fast Fourier Transform (FFT) Class](http://code.compartmental.net/minim/javadoc/ddf/minim/analysis/FFT.html)

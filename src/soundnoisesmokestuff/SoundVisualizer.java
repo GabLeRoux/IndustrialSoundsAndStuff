@@ -2,6 +2,7 @@ package soundnoisesmokestuff;
 
 import processing.core.PApplet;
 import ddf.minim.AudioInput;
+import ddf.minim.AudioOutput;
 import ddf.minim.Minim;
 import ddf.minim.analysis.FFT;
 
@@ -69,7 +70,7 @@ public class SoundVisualizer {
 			if (!directVal)
 				midTemp += fft.getBand(i);
 			if (spectrumEnabled) {
-				drawSpectrum(i, 0, 255.0f, 0.0f, 100.0f);
+				drawSpectrum(i, 255.0f, 219.0f, 8.0f, 100.0f);
 			}
 		}
 
